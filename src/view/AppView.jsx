@@ -3,6 +3,7 @@ import React from "react"
 import { AppViewBar		} from "."
 import { ViewColumn		} from "."
 import { ViewPersonal	} from "."
+import { ViewHistory	} from "."
 import { AppViewBottom	} from "."
 
 import { useAtom	} from "jotai"
@@ -20,9 +21,15 @@ export default function AppView() {
 	{
 		content = (<ViewColumn/>)
 	}
-	else if(loginInfo !== undefined && viewID === 1)
-	{
-		content = (<ViewPersonal/>)
+	else{
+		if(viewID === 1)
+		{
+			content = (<ViewPersonal/>)
+		}
+		else if(viewID === 2)
+		{
+			content = (<ViewHistory/>)
+		}
 	}
 
 	if(viewID !== undefined)

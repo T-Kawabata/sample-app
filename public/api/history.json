@@ -1,0 +1,27 @@
+{
+	"status":{ "date":"2021/05/21","image":"./images/d01.jpg","progress":75},
+	"graph":[
+		{ "date":"6月" ,"y1":100,"y2":100},
+		{ "date":"7月" ,"y1":95,"y2":90},
+		{ "date":"8月" ,"y1":80,"y2":85},
+		{ "date":"9月" ,"y1":90,"y2":80},
+		{ "date":"10月","y1":85,"y2":70},
+		{ "date":"11月","y1":75,"y2":70},
+		{ "date":"12月","y1":85,"y2":65},
+		{ "date":"1月" ,"y1":75,"y2":60},
+		{ "date":"2月" ,"y1":70,"y2":55},
+		{ "date":"3月" ,"y1":65,"y2":50},
+		{ "date":"4月" ,"y1":60,"y2":45},
+		{ "date":"5月" ,"y1":65,"y2":40}
+	],
+	"history": [
+		{ "date":"2021/05/21","image":"./images/m01.jpg","text":"Morning"},
+		{ "date":"2021/05/21","image":"./images/l03.jpg","text":"Lunch"},
+		{ "date":"2021/05/21","image":"./images/d01.jpg","text":"Dinner"},
+		{ "date":"2021/05/21","image":"./images/l01.jpg","text":"Snack"},
+		{ "date":"2021/05/21","image":"./images/m01.jpg","text":"Morning"},
+		{ "date":"2021/05/21","image":"./images/l02.jpg","text":"Lunch"},
+		{ "date":"2021/05/21","image":"./images/d02.jpg","text":"Dinner"},
+		{ "date":"2021/05/21","image":"./images/s01.jpg","text":"Snack"}
+	]
+}

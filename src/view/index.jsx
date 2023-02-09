@@ -4,5 +4,6 @@ export { default as AppViewBottom	} from './AppViewBottom';
 
 export { default as ViewColumn		} from './ViewColumn';
 export { default as ViewPersonal	} from './ViewPersonal';
+export { default as ViewHistory		} from './ViewHistory';
 
 

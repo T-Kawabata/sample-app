@@ -3,6 +3,7 @@ import { useState	} from 'react';
 import { useEffect	} from 'react';
 
 import { Container	 	} from "@mui/material"
+import { Box		 	} from "@mui/material"
 import { Button		 	} from "@mui/material"
 import { Divider		} from '@mui/material';
 import { Grid			} from "@mui/material"
@@ -13,37 +14,67 @@ import { CardMedia		} from "@mui/material"
 import { Typography		} from "@mui/material"
 import { styled			} from "@mui/material/styles"
 
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend  } from 'recharts';
+
 import { useAtom	} from "jotai"
 import { ViewID		} from "./Store"
+import moment from "moment";
 
-const ViewContainer = styled(Container)(({ theme }) => ({
+const ViewContainer = styled(Box)(({ theme }) => ({
 	marginTop: 72,
 }))
 const TagGrid = styled(Grid)(({ theme }) => ({
-	margin: 8,
+	width: 288,
+	height: 288,
+	padding: 24,
+	margin: '0 24px',
+	background: theme.palette.tag.label,
 }))
 const TagContainer = styled(Container)(({ theme }) => ({
-	width: 264,
-	height: 144,
+	width: 240,
+	height: 240,
 	textAlign: 'center',
 	verticalAlign: 'middle',
 	display: 'table-cell',
 	background: theme.palette.tag.container,
 }))
-const TagLabel = styled(Typography)(({ theme }) => ({
+const TagText = styled(Box)(({ theme }) => ({
 	color: theme.palette.tag.label,
-	lineHeight: '27px',
+	fontSize: '25px',
+	lineHeight: '30px',
 }))
+const TagLabel = styled(Box)(({ theme }) => ({
+	color: theme.palette.white,
+	background: theme.palette.column.tag,
+	fontSize: '14px',
+	lineHeight: '20px',
+	display: 'inline-block',
+	padding: '0 8px',
+}))
+const GraphContainer = styled(Box)(({ theme }) => ({
+	position: 'relative',
+	backgroundColor: theme.palette.black,
+	width: 960,
+	height: 420,
+	margin: '56px 0 0 0',
+	padding: 0,
+}))
+const GraphButton = styled(Button)(({ theme }) => ({
+	color: theme.palette.column.tag,
+	backgroundColor: theme.palette.white,
+	margin: '16px  0 0 16px',
+	width: 54,
+	height: 24,
+	borderRadius: 24,
+}))
+
+
 const TagDivider = styled(Divider)(({ theme }) => ({
 	margin: 'auto',
 	width: 56,
 	borderWidth: 1,
 	borderColor: '#FFFFFF',
 	opacity: '0.3'
-}))
-const TagText = styled(Typography)(({ theme }) => ({
-	color: theme.palette.tag.text,
-	lineHeight: '26px',
 }))
 const ColumnGrid = styled(Grid)(({ theme }) => ({
 	margin: 8,
@@ -94,7 +125,6 @@ const ViewCenter = styled('div')(({ theme }) => ({
 export default function ViewHistory() {
 	const [ initialized	, setInitialized	] = useState(false);
 	const [ content		, setContent		] = useState(undefined);
-	const [ viewID		, setViewID			] = useAtom(ViewID);
 
 	useEffect(() => {
 		if(!initialized) {
@@ -111,59 +141,62 @@ export default function ViewHistory() {
 		return null;
 	}
 
+	const commands = [
+		{ "text":"BODY RECORD"	, "label":"自分のカラダの記録"	, "image": "./assets/MyRecommend-1.png"},
+		{ "text":"MY EXERCISE"	, "label":"自分の運動の記録"	, "image": "./assets/MyRecommend-2.png"},
+		{ "text":"MY DIARY"		, "label":"自分の日記"			, "image": "./assets/MyRecommend-3.png"}
+	]
 	const tags =[];
-	content.tags.forEach((v,id) => {
+	commands.forEach((v,id) => {
 		tags.push(
 			<TagGrid key={id} item>
 				<TagContainer>
-					<TagLabel>{v.label_1}</TagLabel>
-					<TagLabel>{v.label_2}</TagLabel>
-					<TagDivider/>
 					<TagText>{v.text}</TagText>
+					<TagLabel>{v.label}</TagLabel>
 				</TagContainer>
 			</TagGrid>
 		);
 	});
-	const columns =[];
-	content.columns.forEach((v,id) => {
-		const columnTags =[];
-		v.tags.forEach((x,xid) => {
-			columnTags.push(<ColumnTag key={xid} size="small">{x}</ColumnTag>);
-		})
-
-		columns.push(
-			<ColumnGrid key={id} item>
-			    <ColumnCard>
-					<CardMedia
-						sx={{ width: 234,height: 144, position:'relative'}}
-						image={v.image}
-					>
-						<ColumnDate>{v.date}</ColumnDate>
-					</CardMedia>
-					<CardContent sx={{padding:0}}>
-						<ColumnText>{v.text}</ColumnText>
-					</CardContent>
-					<CardActions disableSpacing sx={{padding:0}}>
-						{columnTags}
-					</CardActions>
-				</ColumnCard>
-			</ColumnGrid>
-		);
-	});
-
-
 
 	return (
-		<ViewContainer>
-			<ViewCenter>
-				<Grid container columns={4} sx={{width:1120}}>
+		<ViewCenter>
+			<ViewContainer >
+				<Grid container columns={3} >
 					{tags}
 				</Grid>
+			</ViewContainer>
+			<GraphContainer >
+				<Box sx={{display:'flex'}}>
+					<Box sx={{margin:'16px 0 0 36px'}}>
+						<Typography sx={{color:'white'}}>BODY</Typography>
+						<Typography sx={{color:'white'}}>RECORD</Typography>
+					</Box>
+					<Typography sx={{color:'white',fontSize:'22px',margin:'8px 0 0 36px'}}>{moment(content.status.date,"YYYY/MM/DD").format("YYYY.MM.DD")}</Typography>
+				</Box>
+				<LineChart
+					width={900}
+					height={300}
+					data={content.graph}
+					margin={{ left:80,top: 20,right:20,bottom:0}}
+				>
+					<CartesianGrid horizontal={false} />
+					<XAxis dataKey="date" tick={{ fill: 'white' }} axisLine={false} tickLine={false} />
+					<Line type="linear" dataKey="y1" stroke="#FFCC21" strokeWidth={3}/>
+					<Line type="linear" dataKey="y2" stroke="#8FE9D0" strokeWidth={3}/>
+				</LineChart>
+				<Box sx={{display:'flex'}}>
+					<GraphButton>日</GraphButton>
+					<GraphButton>週</GraphButton>
+					<GraphButton>月</GraphButton>
+					<GraphButton>年</GraphButton>
+				</Box>
+			</GraphContainer>
+			<ViewContainer >
+
 				<Grid container columns={4} sx={{marginTop:'8px',width:1000}}>
-					{columns}
 				</Grid>
 				<ColumnMore>コラムをもっと見る</ColumnMore>
-			</ViewCenter>
-		</ViewContainer>
+			</ViewContainer>
+		</ViewCenter>
 	)
 }
