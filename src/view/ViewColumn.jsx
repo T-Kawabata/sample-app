@@ -3,18 +3,23 @@ import { useState	} from 'react';
 import { useEffect	} from 'react';
 
 import { Container	 	} from "@mui/material"
+import { Button		 	} from "@mui/material"
 import { Divider		} from '@mui/material';
 import { Grid			} from "@mui/material"
 import { Card			} from "@mui/material"
+import { CardActions	} from "@mui/material"
 import { CardContent	} from "@mui/material"
 import { CardMedia		} from "@mui/material"
 import { Typography		} from "@mui/material"
 import { styled			} from "@mui/material/styles"
 
+import { useAtom	} from "jotai"
+import { LoginInfo  } from "./Store"
+import { ViewID		} from "./Store"
+
 const ViewContainer = styled(Container)(({ theme }) => ({
 	marginTop: 72,
 }))
-
 const TagGrid = styled(Grid)(({ theme }) => ({
 	margin: 8,
 }))
@@ -46,6 +51,18 @@ const ColumnGrid = styled(Grid)(({ theme }) => ({
 }))
 const ColumnCard = styled(Card)(({ theme }) => ({
 	width: 234,
+	borderRadius: 0,
+	boxShadow: 'none',
+}))
+const ColumnDate = styled(Typography)(({ theme }) => ({
+	backgroundColor: theme.palette.tag.label,
+	color: theme.palette.tag.text,
+	bottom:0,
+	left:0,
+	padding: '0 8px',
+	position: 'absolute',
+	fontSize: '15px',
+	lineHeight: '24px',
 }))
 const ColumnText = styled(Typography)(({ theme }) => ({
 	height: 48,
@@ -53,12 +70,20 @@ const ColumnText = styled(Typography)(({ theme }) => ({
 	fontSize: '15px',
 	lineHeight: '22px',
 }))
-const ColumnTag = styled(Typography)(({ theme }) => ({
+const ColumnTag = styled(Button)(({ theme }) => ({
 	color: theme.palette.column.tag,
 	height: 24,
-	marginTop: 8,
 	fontSize: '12px',
 	lineHeight: '22px',
+}))
+const ColumnMore = styled(Button)(({ theme }) => ({
+	background: 'linear-gradient(#FFCC21,#FF963C)',
+	color: theme.palette.tag.text,
+	width:296,
+	height:56,
+	fontSize: '18px',
+	lineHeight: '25px',
+	margin: 16,
 }))
 const ViewCenter = styled('div')(({ theme }) => ({
 	display: 'flex',
@@ -70,29 +95,34 @@ const ViewCenter = styled('div')(({ theme }) => ({
 export default function ViewColumn() {
 	const [ initialized	, setInitialized	] = useState(false);
 	const [ content		, setContent		] = useState(undefined);
+	const [ viewID		, setViewID			] = useAtom(ViewID);
 
 	useEffect(() => {
 		if(!initialized) {
 			fetch("./api/column.json")
 			.then(response => response.json())
 			.then(json => {
+				console.log("1")
 				setContent(json);
+				console.log(viewID);
+				setViewID(0);
+				console.log("2")
 			});
 
 			setInitialized(true);
 		}
 	},[initialized]);
 
+
+
 	if(content === undefined){
 		return null;
 	}
 
-	console.log(content);
-
 	const tags =[];
-	content.tags.forEach(v => {
+	content.tags.forEach((v,id) => {
 		tags.push(
-			<TagGrid item>
+			<TagGrid key={id} item>
 				<TagContainer>
 					<TagLabel>{v.label_1}</TagLabel>
 					<TagLabel>{v.label_2}</TagLabel>
@@ -103,26 +133,28 @@ export default function ViewColumn() {
 		);
 	});
 	const columns =[];
-	content.columns.forEach(v => {
+	content.columns.forEach((v,id) => {
 		const columnTags =[];
-		v.tags.forEach(x => {
-			columnTags.push(x+" ");
+		v.tags.forEach((x,xid) => {
+			columnTags.push(<ColumnTag key={xid} size="small">{x}</ColumnTag>);
 		})
 
 		columns.push(
-			<ColumnGrid item>
+			<ColumnGrid key={id} item>
 			    <ColumnCard>
 					<CardMedia
-						sx={{ width: 234,height: 144 }}
+						sx={{ width: 234,height: 144, position:'relative'}}
 						image={v.image}
-					/>
+					>
+						<ColumnDate>{v.date}</ColumnDate>
+					</CardMedia>
 					<CardContent sx={{padding:0}}>
 						<ColumnText>{v.text}</ColumnText>
-						<ColumnTag>{columnTags}</ColumnTag>
 					</CardContent>
+					<CardActions disableSpacing sx={{padding:0}}>
+						{columnTags}
+					</CardActions>
 				</ColumnCard>
-
-				<Container sx={{width:234}}></Container>
 			</ColumnGrid>
 		);
 	});
@@ -138,6 +170,7 @@ export default function ViewColumn() {
 				<Grid container columns={4} sx={{marginTop:'8px',width:1000}}>
 					{columns}
 				</Grid>
+				<ColumnMore>コラムをもっと見る</ColumnMore>
 			</ViewCenter>
 		</ViewContainer>
 	)

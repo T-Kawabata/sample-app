@@ -1,8 +1,6 @@
 import React		  from "react"
-import { useEffect	} from "react"
-import { useRef		} from "react"
 import { useState	} from "react"
-import { useCallback} from 'react';
+import { useCallback} from "react"
 
 import { AppBar		} from "@mui/material"
 import { Avatar		} from "@mui/material"
@@ -12,17 +10,13 @@ import { Button		} from "@mui/material"
 import { Container	} from "@mui/material"
 import { Toolbar	} from "@mui/material"
 import { Typography	} from "@mui/material"
-
-
-import { Popper		} from "@mui/material"
-import { Paper	} from "@mui/material"
-import { ClickAwayListener	} from "@mui/material"
-import { Menu	} from "@mui/material"
+import { Menu		} from "@mui/material"
 import { MenuItem	} from "@mui/material"
-
-
 import { styled		} from "@mui/material/styles"
 
+import { useAtom	} from "jotai"
+import { LoginInfo  } from "./Store"
+import { ViewID		} from "./Store"
 
 const ViewAppBar = styled(AppBar)(({ theme }) => ({
 	height: 64,
@@ -56,17 +50,31 @@ const MenuNav = styled(Menu)(({ theme }) => ({
 	  },
 }))
 
-
-
 export default function AppViewBar() {
-	const [anchorEl, setAnchorEl] = useState(null);
-	const open = Boolean(anchorEl);
+	const [anchorEl	, setAnchorEl]	 = useState(null);
+	const [loginInfo, setLoginInfo]	= useAtom(LoginInfo);
+	const [viewID	, setViewID]	= useAtom(ViewID);
 
 	const handleOpen = useCallback((event) => {
 		setAnchorEl(event.currentTarget);
 	});
 
 	const handleClose = useCallback((event) => {
+		setAnchorEl(null);
+	});
+
+	const handleLogin = useCallback((event) => {
+		if(!loginInfo)
+		{
+			fetch("./api/login.json")
+			.then(response => response.json())
+			.then(json => {
+				console.log("1")
+				setLoginInfo(json);
+				setViewID(1);
+				console.log("2")
+			});
+		}
 		setAnchorEl(null);
 	});
 
@@ -78,20 +86,22 @@ export default function AppViewBar() {
 						<IconLogo src="./assets/logo.png" />
 					</Box>
 					<Box>
-						<Button sx={{ width: 160 }}>
+						<Button sx={{ width: 160 }} onClick={()=>{if(loginInfo){setViewID(2)}}}>
 							<IconNav src="./assets/icon_memo.png" />
 							<TextNav>自分の記録</TextNav>
 						</Button>
-						<Button sx={{ width: 160 }}>
+						<Button sx={{ width: 160 }} onClick={()=>{if(loginInfo){setViewID(3)}}}>
 							<IconNav src="./assets/icon_challenge.png" />
 							<TextNav>チャレンジ</TextNav>
 						</Button>
-						<Button sx={{ width: 160 }}>
+						<Button sx={{ width: 160 }} onClick={()=>{if(loginInfo){setViewID(4)}}}>
 							<IconBadge badgeContent={1} color="badge" >
 								<IconNav src="./assets/icon_info.png" />
 							</IconBadge>
 							<TextNav>お知らせ</TextNav>
 						</Button>
+					</Box>
+					<Box>
 						<Button id="menu-button" onClick={handleOpen}>
 							<IconNav src="./assets/icon_menu.png" />
 						</Button>
@@ -103,7 +113,7 @@ export default function AppViewBar() {
 								'aria-labelledby': 'menu-button',
 							}}
 						>
-							<MenuItem sx={{ background: 'white'}} onClick={handleClose}>ログイン</MenuItem>
+							<MenuItem sx={{ background: 'white'}} onClick={handleLogin}>ログイン</MenuItem>
 						</MenuNav>
 					</Box>
 				</Toolbar>

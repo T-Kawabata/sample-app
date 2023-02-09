@@ -1,3 +1,5 @@
 import { atom } from 'jotai'
 
-export const personal = atom(undefined)
+export const LoginInfo	= atom(undefined);
+export const ViewID		= atom(undefined);
+
