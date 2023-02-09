@@ -10,6 +10,7 @@ import { AppView		} from './view'
 const theme = createTheme({
 	palette: {
 		background: '#414141',
+		black: common.black,
 		white: common.white,
 		badge: {
 			main: '#EA6C00',

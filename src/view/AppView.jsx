@@ -13,18 +13,28 @@ export default function AppView() {
 	const [loginInfo, ]	= useAtom(LoginInfo);
 	const [viewID	, ]	= useAtom(ViewID);
 
+	let content = null;
+	let fotter = null;
+
+	if(loginInfo === undefined)
+	{
+		content = (<ViewColumn/>)
+	}
+	else if(loginInfo !== undefined && viewID === 1)
+	{
+		content = (<ViewPersonal/>)
+	}
+
+	if(viewID !== undefined)
+	{
+		fotter = (<AppViewBottom/>)
+	}
+
 	return (
 		<div>
 			<AppViewBar />
-			{ (loginInfo === undefined) &&
-				<ViewColumn/>
-			}
-			{ (loginInfo !== undefined && viewID === 1) &&
-				<ViewPersonal/>
-			}
-			{ (viewID !== undefined) &&
-				<AppViewBottom/>
-			}
+			{ content }
+			{ fotter }
 		</div>
 	)
 }

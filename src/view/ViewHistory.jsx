@@ -91,28 +91,21 @@ const ViewCenter = styled('div')(({ theme }) => ({
     justifyContent: 'center',
 }))
 
-export default function ViewColumn() {
+export default function ViewHistory() {
 	const [ initialized	, setInitialized	] = useState(false);
 	const [ content		, setContent		] = useState(undefined);
 	const [ viewID		, setViewID			] = useAtom(ViewID);
 
 	useEffect(() => {
 		if(!initialized) {
-			fetch("./api/column.json")
+			fetch("./api/history.json")
 			.then(response => response.json())
 			.then(json => {
-				console.log("1")
 				setContent(json);
-				console.log(viewID);
-				setViewID(0);
-				console.log("2")
 			});
-
 			setInitialized(true);
 		}
 	},[initialized]);
-
-
 
 	if(content === undefined){
 		return null;
