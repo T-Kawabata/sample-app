@@ -36,8 +36,8 @@ const IconBadge = styled(Badge)(({ theme }) => ({
 	}
 }))
 
-const TextNav = styled(Typography)(({ theme }) => ({
-	color: theme.palette.white,
+const TextNav = styled(Typography,{ shouldForwardProp: (prop) => prop !== 'active'})(({ active,theme }) => ({
+	color: active ? theme.palette.badge.main : theme.palette.white,
 	margin: 8,
 }))
 
@@ -73,6 +73,10 @@ export default function AppViewBar() {
 				setViewID(1);
 			});
 		}
+		else{
+			setLoginInfo(undefined);
+			setViewID(0);
+		}
 		setAnchorEl(null);
 	});
 
@@ -86,14 +90,14 @@ export default function AppViewBar() {
 					<Box>
 						<Button sx={{ width: 160 }} onClick={()=>{if(loginInfo){setViewID(2)}}}>
 							<IconNav src="./assets/icon_memo.png" />
-							<TextNav>自分の記録</TextNav>
+							<TextNav active={viewID && viewID === 2} >自分の記録</TextNav>
 						</Button>
 						<Button sx={{ width: 160 }} onClick={()=>{if(loginInfo){setViewID(3)}}}>
 							<IconNav src="./assets/icon_challenge.png" />
 							<TextNav>チャレンジ</TextNav>
 						</Button>
 						<Button sx={{ width: 160 }} onClick={()=>{if(loginInfo){setViewID(4)}}}>
-							<IconBadge badgeContent={1} color="badge" >
+							<IconBadge badgeContent={loginInfo ? 1 : 0} color="badge" >
 								<IconNav src="./assets/icon_info.png" />
 							</IconBadge>
 							<TextNav>お知らせ</TextNav>
@@ -111,7 +115,7 @@ export default function AppViewBar() {
 								'aria-labelledby': 'menu-button',
 							}}
 						>
-							<MenuItem sx={{ background: 'white'}} onClick={handleLogin}>ログイン</MenuItem>
+							<MenuItem sx={{ background: 'white'}} onClick={handleLogin}>{(loginInfo)? "ログアウト":"ログイン"}</MenuItem>
 						</MenuNav>
 					</Box>
 				</Toolbar>
