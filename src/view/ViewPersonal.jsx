@@ -1,40 +1,35 @@
 import React from "react"
 
-import { CircularProgress } from "@mui/material"
-import { Avatar } from "@mui/material"
-import { Box } from "@mui/material"
-import { Grid			} from "@mui/material"
-import { Button } from "@mui/material"
-import { Container } from "@mui/material"
-import { Toolbar } from "@mui/material"
-import { Typography } from "@mui/material"
-import { Paper } from "@mui/material"
-import { Card			} from "@mui/material"
-import { CardActions	} from "@mui/material"
-import { CardContent	} from "@mui/material"
-import { CardMedia		} from "@mui/material"
+import { CircularProgress	} from "@mui/material"
+import { Box 				} from "@mui/material"
+import { Grid				} from "@mui/material"
+import { Button 			} from "@mui/material"
+import { Typography 		} from "@mui/material"
+import { Card				} from "@mui/material"
+import { CardMedia			} from "@mui/material"
+import { styled 			} from "@mui/material/styles"
 
+import { LineChart		} from 'recharts';
+import { Line			} from 'recharts';
+import { XAxis			} from 'recharts';
+import { CartesianGrid	} from 'recharts';
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend  } from 'recharts';
+import   moment		  	  from 'moment';
 
-
-import { styled } from "@mui/material/styles"
-
-import   moment		  from 'moment';
-
-import { useAtom	} from "jotai"
-import { LoginInfo  } from "./Store"
+import { useAtom		} from "jotai"
+import { LoginInfo  	} from "./Store"
 
 const ViewContainer = styled(Box)(({ theme }) => ({
 }))
 const ViewCenter = styled('div')(({ theme }) => ({
+	marginTop: 64,
 	display: 'flex',
 	flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
 }))
 const ViewTopContainer = styled(Box)(({ theme }) => ({
-	marginTop: 64,
+	marginTop: 16,
 	height: 316,
 	display: 'flex',
 	flex: 'nowrap',

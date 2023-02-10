@@ -101,11 +101,8 @@ export default function ViewColumn() {
 			fetch("./api/column.json")
 			.then(response => response.json())
 			.then(json => {
-				console.log("1")
 				setContent(json);
-				console.log(viewID);
 				setViewID(0);
-				console.log("2")
 			});
 
 			setInitialized(true);

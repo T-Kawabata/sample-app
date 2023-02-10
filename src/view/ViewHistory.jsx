@@ -5,20 +5,18 @@ import { useEffect	} from 'react';
 import { Container	 	} from "@mui/material"
 import { Box		 	} from "@mui/material"
 import { Button		 	} from "@mui/material"
-import { Divider		} from '@mui/material';
+import { Link			} from '@mui/material';
 import { Grid			} from "@mui/material"
 import { Card			} from "@mui/material"
-import { CardActions	} from "@mui/material"
-import { CardContent	} from "@mui/material"
-import { CardMedia		} from "@mui/material"
 import { Typography		} from "@mui/material"
 import { styled			} from "@mui/material/styles"
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend  } from 'recharts';
+import { LineChart		} from 'recharts';
+import { Line			} from 'recharts';
+import { XAxis			} from 'recharts';
+import { CartesianGrid	} from 'recharts';
 
-import { useAtom	} from "jotai"
-import { ViewID		} from "./Store"
-import moment from "moment";
+import   moment 		  from "moment";
 
 const ViewContainer = styled(Box)(({ theme }) => ({
 	marginTop: 72,
@@ -30,14 +28,17 @@ const TagGrid = styled(Grid)(({ theme }) => ({
 	margin: '0 24px',
 	background: theme.palette.tag.label,
 }))
-const TagContainer = styled(Container)(({ theme }) => ({
+const TagContainer = styled(Container,{ shouldForwardProp: (prop) => prop !== 'base'})(({ base,theme }) => ({
 	width: 240,
 	height: 240,
 	textAlign: 'center',
 	verticalAlign: 'middle',
 	display: 'table-cell',
-	background: theme.palette.tag.container,
+	backgroundBlendMode: 'luminosity',
+	backgroundImage: 'url(./assets/MyRecommend-'+base+'.png)',
+	backgroundColor: theme.palette.tag.container,
 }))
+
 const TagText = styled(Box)(({ theme }) => ({
 	color: theme.palette.tag.label,
 	fontSize: '25px',
@@ -59,53 +60,91 @@ const GraphContainer = styled(Box)(({ theme }) => ({
 	margin: '56px 0 0 0',
 	padding: 0,
 }))
-const GraphButton = styled(Button)(({ theme }) => ({
-	color: theme.palette.column.tag,
-	backgroundColor: theme.palette.white,
+const GraphButton = styled(Button,{ shouldForwardProp: (prop) => prop !== 'active'})(({ active,theme }) => ({
+	color: active ? theme.palette.white : theme.palette.column.tag,
+	backgroundColor: active ? theme.palette.column.tag : theme.palette.white,
 	margin: '16px  0 0 16px',
 	width: 54,
 	height: 24,
 	borderRadius: 24,
 }))
+const ListContainer = styled(Box)(({ theme }) => ({
+	position: 'relative',
+	backgroundColor: theme.palette.black,
+	width: 960,
+	height: 280,
+	margin: '56px 0 0 0',
+	padding: 0,
+}))
 
+const ListGridContainer = styled(Box)(({ theme }) => ({
+	height:200,
+	width: 930,
+	overflow:'auto',
+	'::-webkit-scrollbar':{
+		width:'6px',
+	},
+	'::-webkit-scrollbar-track': {
+		borderRadius: '6px',
+		backgroundColor: '#777777',
+	},
 
-const TagDivider = styled(Divider)(({ theme }) => ({
-	margin: 'auto',
-	width: 56,
-	borderWidth: 1,
-	borderColor: '#FFFFFF',
-	opacity: '0.3'
+	'::-webkit-scrollbar-thumb':{
+		borderRadius: '6px',
+		backgroundColor: '#FFCC21',
+	},
+}))
+
+const ListGrid = styled(Grid)(({ theme }) => ({
+	width: 880,
+	margin: '0 0 0 24px',
+}))
+const ListGridColumn = styled(Grid)(({ theme }) => ({
+	width: 390,
+	margin: '8px 40px 0 0',
+	borderBottom: '1px solid #777777',
+}))
+const ListGridColumnText1 = styled(Typography)(({ theme }) => ({
+	color: theme.palette.white,
+	fontSize: '15px',
+	lineHeight: '22px',
+}))
+const ListGridColumnText2 = styled(Typography)(({ theme }) => ({
+	color: theme.palette.tag.label,
+	fontSize: '15px',
+	lineHeight: '18px',
+}))
+const ListGridColumnText3 = styled(Typography)(({ theme }) => ({
+	color: theme.palette.tag.label,
+	fontSize: '18px',
+	lineHeight: '22px',
+}))
+const DiaryContainer = styled(Box)(({ theme }) => ({
+	marginTop: '56px',
+	width: 960,
 }))
 const ColumnGrid = styled(Grid)(({ theme }) => ({
-	margin: 8,
 }))
 const ColumnCard = styled(Card)(({ theme }) => ({
-	width: 234,
+	width: 230,
+	height: 230,
+	border: '1px solid',
 	borderRadius: 0,
 	boxShadow: 'none',
+	padding: '16px',
 }))
-const ColumnDate = styled(Typography)(({ theme }) => ({
-	backgroundColor: theme.palette.tag.label,
-	color: theme.palette.tag.text,
-	bottom:0,
-	left:0,
-	padding: '0 8px',
-	position: 'absolute',
-	fontSize: '15px',
-	lineHeight: '24px',
-}))
-const ColumnText = styled(Typography)(({ theme }) => ({
-	height: 48,
-	marginTop: 8,
-	fontSize: '15px',
+const ColumnText1 = styled(Typography)(({ theme }) => ({
+	color: theme.palette.black,
+	fontSize: '18px',
 	lineHeight: '22px',
 }))
-const ColumnTag = styled(Button)(({ theme }) => ({
-	color: theme.palette.column.tag,
-	height: 24,
+const ColumnText2 = styled(Typography)(({ theme }) => ({
+	color: theme.palette.black,
 	fontSize: '12px',
-	lineHeight: '22px',
+	lineHeight: '17px',
 }))
+
+
 const ColumnMore = styled(Button)(({ theme }) => ({
 	background: 'linear-gradient(#FFCC21,#FF963C)',
 	color: theme.palette.tag.text,
@@ -142,19 +181,51 @@ export default function ViewHistory() {
 	}
 
 	const commands = [
-		{ "text":"BODY RECORD"	, "label":"自分のカラダの記録"	, "image": "./assets/MyRecommend-1.png"},
-		{ "text":"MY EXERCISE"	, "label":"自分の運動の記録"	, "image": "./assets/MyRecommend-2.png"},
-		{ "text":"MY DIARY"		, "label":"自分の日記"			, "image": "./assets/MyRecommend-3.png"}
+		{ "text":"BODY RECORD"	, "label":"自分のカラダの記録"	,"link":"#RECORD"},
+		{ "text":"MY EXERCISE"	, "label":"自分の運動の記録"	,"link":"#EXERCISE"},
+		{ "text":"MY DIARY"		, "label":"自分の日記"			,"link":"#DIARY"}
 	]
 	const tags =[];
 	commands.forEach((v,id) => {
 		tags.push(
 			<TagGrid key={id} item>
-				<TagContainer>
-					<TagText>{v.text}</TagText>
-					<TagLabel>{v.label}</TagLabel>
-				</TagContainer>
+				<Link href={v.link}>
+					<TagContainer base={id}>
+						<TagText>{v.text}</TagText>
+						<TagLabel>{v.label}</TagLabel>
+					</TagContainer>
+				</Link>
 			</TagGrid>
+		);
+	});
+
+	const history =[];
+	content.history.forEach((v,id) => {
+		history.push(
+			<ListGridColumn item key={id} xs={1}>
+				<Box sx={{display:'flex',color:'white'}}>
+					<ListGridColumnText1>・</ListGridColumnText1>
+					<Box sx={{ flexGrow: 1}}>
+						<ListGridColumnText1>{v.text}</ListGridColumnText1>
+						<ListGridColumnText2>{v.cal}</ListGridColumnText2>
+					</Box>
+					<ListGridColumnText3>{v.time}</ListGridColumnText3>
+				</Box>
+			</ListGridColumn>
+		);
+	});
+
+	const diary =[];
+	content.diary.forEach((v,id) => {
+		diary.push(
+			<ColumnGrid item key={id} >
+				<ColumnCard>
+					<ColumnText1>{moment(v.date,"YYYY/MM/DD hh:mm").format("YYYY/MM/DD")}</ColumnText1>
+					<ColumnText1>{moment(v.date,"YYYY/MM/DD hh:mm").format("hh:mm")}</ColumnText1>
+					<ColumnText2 sx={{marginTop:'12px'}}>{v.text1}</ColumnText2>
+					<ColumnText2>{v.text2}</ColumnText2>
+				</ColumnCard>
+			</ColumnGrid>
 		);
 	});
 
@@ -165,7 +236,7 @@ export default function ViewHistory() {
 					{tags}
 				</Grid>
 			</ViewContainer>
-			<GraphContainer >
+			<GraphContainer id={'RECORD'}>
 				<Box sx={{display:'flex'}}>
 					<Box sx={{margin:'16px 0 0 36px'}}>
 						<Typography sx={{color:'white'}}>BODY</Typography>
@@ -188,15 +259,30 @@ export default function ViewHistory() {
 					<GraphButton>日</GraphButton>
 					<GraphButton>週</GraphButton>
 					<GraphButton>月</GraphButton>
-					<GraphButton>年</GraphButton>
+					<GraphButton active={true}>年</GraphButton>
 				</Box>
 			</GraphContainer>
-			<ViewContainer >
-
-				<Grid container columns={4} sx={{marginTop:'8px',width:1000}}>
+			<ListContainer id={'EXERCISE'}>
+				<Box sx={{display:'flex'}}>
+					<Box sx={{margin:'16px 0 0 36px'}}>
+						<Typography sx={{color:'white'}}>MY</Typography>
+						<Typography sx={{color:'white'}}>EXERCISE</Typography>
+					</Box>
+					<Typography sx={{color:'white',fontSize:'22px',margin:'8px 0 0 36px'}}>{moment(content.status.date,"YYYY/MM/DD").format("YYYY.MM.DD")}</Typography>
+				</Box>
+				<ListGridContainer>
+					<ListGrid container columns={2}>
+						{history}
+					</ListGrid>
+				</ListGridContainer>
+			</ListContainer>
+			<DiaryContainer id={'DIARY'}>
+				<Typography sx={{fontSize:'22px',height:33}}>MY DIARY</Typography>
+				<Grid container columns={4} sx={{width:1000}} spacing={'12px'}>
+					{diary}
 				</Grid>
-				<ColumnMore>コラムをもっと見る</ColumnMore>
-			</ViewContainer>
+			</DiaryContainer>
+			<ColumnMore>自分の日記をもっと見る</ColumnMore>
 		</ViewCenter>
 	)
 }

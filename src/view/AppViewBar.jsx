@@ -69,10 +69,8 @@ export default function AppViewBar() {
 			fetch("./api/login.json")
 			.then(response => response.json())
 			.then(json => {
-				console.log("1")
 				setLoginInfo(json);
 				setViewID(1);
-				console.log("2")
 			});
 		}
 		setAnchorEl(null);
