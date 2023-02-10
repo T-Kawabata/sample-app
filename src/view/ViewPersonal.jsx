@@ -1,13 +1,13 @@
-import React from "react"
+import React from "react";
 
-import { CircularProgress	} from "@mui/material"
-import { Box 				} from "@mui/material"
-import { Grid				} from "@mui/material"
-import { Button 			} from "@mui/material"
-import { Typography 		} from "@mui/material"
-import { Card				} from "@mui/material"
-import { CardMedia			} from "@mui/material"
-import { styled 			} from "@mui/material/styles"
+import { CircularProgress	} from "@mui/material";
+import { Box 				} from "@mui/material";
+import { Grid				} from "@mui/material";
+import { Button 			} from "@mui/material";
+import { Typography 		} from "@mui/material";
+import { Card				} from "@mui/material";
+import { CardMedia			} from "@mui/material";
+import { styled 			} from "@mui/material/styles";
 
 import { LineChart		} from 'recharts';
 import { Line			} from 'recharts';
@@ -16,48 +16,47 @@ import { CartesianGrid	} from 'recharts';
 
 import   moment		  	  from 'moment';
 
-import { useAtom		} from "jotai"
-import { LoginInfo  	} from "./Store"
+import { useAtom		} from "jotai";
+import { LoginInfo  	} from "./Store";
 
-const ViewContainer = styled(Box)(({ theme }) => ({
-}))
-const ViewCenter = styled('div')(({ theme }) => ({
+const ViewContainer = styled(Box)(({ theme }) => ({}))
+const ViewCenter = styled("div")(({ theme }) => ({
 	marginTop: 64,
-	display: 'flex',
-	flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+	display: "flex",
+	flexDirection: "column",
+	alignItems: "center",
+	justifyContent: "center",
 }))
 const ViewTopContainer = styled(Box)(({ theme }) => ({
 	marginTop: 16,
 	height: 316,
-	display: 'flex',
-	flex: 'nowrap',
+	display: "flex",
+	flex: "nowrap",
 }))
 const LeftContainer = styled(Box)(({ theme }) => ({
-	position: 'relative',
+	position: "relative",
 	width: 540,
 	height: 316,
 	margin: 0,
 	padding: 0,
 }))
-const LeftBox = styled(Box )(({ theme }) => ({
+const LeftBox = styled(Box)(({ theme }) => ({
 	width: 540,
 	height: 316,
-	objectFit: 'none',
+	objectFit: "none",
 }))
-const LeftProgress = styled(CircularProgress )(({ theme }) => ({
-	position: 'absolute',
+const LeftProgress = styled(CircularProgress)(({ theme }) => ({
+	position: "absolute",
 	color: theme.palette.white,
 	top: 0,
 	bottom: 0,
 	left: 0,
 	right: 0,
-	margin: 'auto',
-	filter: 'drop-shadow(0px 0px 6px #FC7400)',
+	margin: "auto",
+	filter: "drop-shadow(0px 0px 6px #FC7400)",
 }))
-const LeftTextBox = styled(Box )(({ theme }) => ({
-	position: 'absolute',
+const LeftTextBox = styled(Box)(({ theme }) => ({
+	position: "absolute",
 	width: 90,
 	height: 30,
 	color: theme.palette.white,
@@ -65,22 +64,22 @@ const LeftTextBox = styled(Box )(({ theme }) => ({
 	bottom: 0,
 	left: 0,
 	right: 0,
-	margin: 'auto',
-	display: 'flex',
-	alignItems: 'flex-end',
+	margin: "auto",
+	display: "flex",
+	alignItems: "flex-end",
 }))
-const LeftText1 = styled(Typography )(({ theme }) => ({
-	lineHeight: '22px',
-	fontSize: '18px',
-	textAlign: 'bottom',
+const LeftText1 = styled(Typography)(({ theme }) => ({
+	lineHeight: "22px",
+	fontSize: "18px",
+	textAlign: "bottom",
 }))
-const LeftText2 = styled(Typography )(({ theme }) => ({
-	lineHeight: '30px',
-	fontSize: '25px',
-	textAlign: 'bottom',
+const LeftText2 = styled(Typography)(({ theme }) => ({
+	lineHeight: "30px",
+	fontSize: "25px",
+	textAlign: "bottom",
 }))
 const RightContainer = styled(Box)(({ theme }) => ({
-	position: 'relative',
+	position: "relative",
 	backgroundColor: theme.palette.black,
 	width: 600,
 	height: 316,
@@ -88,19 +87,18 @@ const RightContainer = styled(Box)(({ theme }) => ({
 	padding: 0,
 }))
 const ColumnMore = styled(Button)(({ theme }) => ({
-	background: 'linear-gradient(#FFCC21,#FF963C)',
+	background: "linear-gradient(#FFCC21,#FF963C)",
 	color: theme.palette.tag.text,
-	width:296,
-	height:56,
-	fontSize: '18px',
-	lineHeight: '25px',
+	width: 296,
+	height: 56,
+	fontSize: "18px",
+	lineHeight: "25px",
 	margin: 16,
 }))
 const InputBox = styled(Box)(({ theme }) => ({
 	width: 134,
 	height: 134,
 	margin: 0,
-
 }))
 const ColumnGrid = styled(Grid)(({ theme }) => ({
 	margin: 8,
@@ -108,32 +106,27 @@ const ColumnGrid = styled(Grid)(({ theme }) => ({
 const ColumnCard = styled(Card)(({ theme }) => ({
 	width: 234,
 	borderRadius: 0,
-	boxShadow: 'none',
+	boxShadow: "none",
 }))
 const ColumnDate = styled(Typography)(({ theme }) => ({
 	backgroundColor: theme.palette.tag.label,
 	color: theme.palette.tag.text,
-	bottom:0,
-	left:0,
-	padding: '0 8px',
-	position: 'absolute',
-	fontSize: '15px',
-	lineHeight: '24px',
+	bottom: 0,
+	left: 0,
+	padding: "0 8px",
+	position: "absolute",
+	fontSize: "15px",
+	lineHeight: "24px",
 }))
 
 export default function ViewPersonal() {
-	const [loginInfo, ]	= useAtom(LoginInfo);
+	const [loginInfo] = useAtom(LoginInfo)
 
-	const commands = [
-		{ "image": "./assets/mornig.png"} ,
-		{ "image": "./assets/lunch.png"},
-		{ "image": "./assets/dinner.png"},
-		{ "image": "./assets/snack.png"}
-	]
-	const inputs =[];
-	commands.forEach((v,id) => {
+	const commands = [{ image: "./assets/mornig.png" }, { image: "./assets/lunch.png" }, { image: "./assets/dinner.png" }, { image: "./assets/snack.png" }]
+	const inputs = []
+	commands.forEach((v, id) => {
 		inputs.push(
-			<Grid item key={id} >
+			<Grid item key={id}>
 				<Button>
 					<InputBox component="img" src={v.image} />
 				</Button>
@@ -141,21 +134,18 @@ export default function ViewPersonal() {
 		)
 	})
 
-	const columns =[];
-	loginInfo.history.forEach((v,id) => {
+	const columns = []
+	loginInfo.history.forEach((v, id) => {
 		columns.push(
 			<ColumnGrid key={id} item>
-			    <ColumnCard>
-					<CardMedia
-						sx={{ width: 234,height: 234, position:'relative'}}
-						image={v.image}
-					>
-						<ColumnDate>{moment(v.date,"YYYY/MM/DD").format('MM.DD')+" "+v.text}</ColumnDate>
+				<ColumnCard>
+					<CardMedia sx={{ width: 234, height: 234, position: "relative" }} image={v.image}>
+						<ColumnDate>{moment(v.date, "YYYY/MM/DD").format("MM.DD") + " " + v.text}</ColumnDate>
 					</CardMedia>
 				</ColumnCard>
 			</ColumnGrid>
-		);
-	});
+		)
+	})
 
 	return (
 		<div>
@@ -164,33 +154,31 @@ export default function ViewPersonal() {
 					<LeftContainer>
 						<LeftBox component="img" src={loginInfo.status.image} />
 						<LeftProgress size={181} thickness={1} variant="determinate" value={loginInfo.status.progress} />
-						<LeftTextBox><LeftText1>{moment(loginInfo.status.date,"YYYY/MM/DD").format('MM/DD')}</LeftText1><LeftText2>{loginInfo.status.progress}％</LeftText2></LeftTextBox>
+						<LeftTextBox>
+							<LeftText1>{moment(loginInfo.status.date, "YYYY/MM/DD").format("MM/DD")}</LeftText1>
+							<LeftText2>{loginInfo.status.progress}％</LeftText2>
+						</LeftTextBox>
 					</LeftContainer>
 					<RightContainer>
-						<LineChart
-							width={600}
-							height={300}
-							data={loginInfo.graph}
-							margin={{ left:20,top: 20,right:20,bottom:0}}
-						>
+						<LineChart width={600} height={300} data={loginInfo.graph} margin={{ left: 20, top: 20, right: 20, bottom: 0 }}>
 							<CartesianGrid horizontal={false} />
-							<XAxis dataKey="date" tick={{ fill: 'white' }} axisLine={false} tickLine={false} />
-							<Line type="linear" dataKey="y1" stroke="#FFCC21" strokeWidth={3}/>
-							<Line type="linear" dataKey="y2" stroke="#8FE9D0" strokeWidth={3}/>
+							<XAxis dataKey="date" tick={{ fill: "white" }} axisLine={false} tickLine={false} />
+							<Line type="linear" dataKey="y1" stroke="#FFCC21" strokeWidth={3} />
+							<Line type="linear" dataKey="y2" stroke="#8FE9D0" strokeWidth={3} />
 						</LineChart>
 					</RightContainer>
 				</ViewTopContainer>
-				<ViewContainer sx={{width:800, marginTop:'16px'}}>
-					<Grid container columns={4} columnSpacing={'64px'}>
+				<ViewContainer sx={{ width: 800, marginTop: "16px" }}>
+					<Grid container columns={4} columnSpacing={"64px"}>
 						{inputs}
 					</Grid>
 				</ViewContainer>
-				<Box sx={{display:'flex'}}>
-					<Box sx={{width:48,height:48}}/>
-					<Grid container columns={4} sx={{marginTop:'8px',width:1000}}>
+				<Box sx={{ display: "flex" }}>
+					<Box sx={{ width: 48, height: 48 }} />
+					<Grid container columns={4} sx={{ marginTop: "8px", width: 1000 }}>
 						{columns}
 					</Grid>
-					<Box component="img" sx={{width:48,height:48,marginLefy:'16px',marginTop:'234px'}} src={"./assets/scroll.png"}/>
+					<Box component="img" sx={{ width: 48, height: 48, marginLefy: "16px", marginTop: "234px" }} src={"./assets/scroll.png"} />
 				</Box>
 				<ColumnMore>記録をもっと見る</ColumnMore>
 			</ViewCenter>

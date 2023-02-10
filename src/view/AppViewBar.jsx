@@ -1,22 +1,22 @@
-import React		  from "react"
-import { useState	} from "react"
-import { useCallback} from "react"
+import React		  from "react";
+import { useState	} from "react";
+import { useCallback} from "react";
 
-import { AppBar		} from "@mui/material"
-import { Avatar		} from "@mui/material"
-import { Box		} from "@mui/material"
-import { Badge		} from "@mui/material"
-import { Button		} from "@mui/material"
-import { Container	} from "@mui/material"
-import { Toolbar	} from "@mui/material"
-import { Typography	} from "@mui/material"
-import { Menu		} from "@mui/material"
-import { MenuItem	} from "@mui/material"
-import { styled		} from "@mui/material/styles"
+import { AppBar		} from "@mui/material";
+import { Avatar		} from "@mui/material";
+import { Box		} from "@mui/material";
+import { Badge		} from "@mui/material";
+import { Button		} from "@mui/material";
+import { Container	} from "@mui/material";
+import { Toolbar	} from "@mui/material";
+import { Typography	} from "@mui/material";
+import { Menu		} from "@mui/material";
+import { MenuItem	} from "@mui/material";
+import { styled		} from "@mui/material/styles";
 
-import { useAtom	} from "jotai"
-import { LoginInfo  } from "./Store"
-import { ViewID		} from "./Store"
+import { useAtom	} from "jotai";
+import { LoginInfo  } from "./Store";
+import { ViewID		} from "./Store";
 
 const ViewAppBar = styled(AppBar)(({ theme }) => ({
 	height: 64,
@@ -31,73 +31,92 @@ const IconNav = styled(Avatar)(({ theme }) => ({
 	height: 32,
 }))
 const IconBadge = styled(Badge)(({ theme }) => ({
-	badge:{
+	badge: {
 		background: theme.palette.badge,
-	}
+	},
 }))
 
-const TextNav = styled(Typography,{ shouldForwardProp: (prop) => prop !== 'active'})(({ active,theme }) => ({
+const TextNav = styled(Typography, { shouldForwardProp: (prop) => prop !== "active" })(({ active, theme }) => ({
 	color: active ? theme.palette.badge.main : theme.palette.white,
 	margin: 8,
 }))
 
 const MenuNav = styled(Menu)(({ theme }) => ({
-    '& .MuiList-root': {
+	"& .MuiList-root": {
 		backgroundColor: theme.palette.white,
-		'&:active': {
-		  backgroundColor: theme.palette.white,
+		"&:active": {
+			backgroundColor: theme.palette.white,
 		},
-	  },
+	},
 }))
 
 export default function AppViewBar() {
-	const [anchorEl	, setAnchorEl]	 = useState(null);
-	const [loginInfo, setLoginInfo]	= useAtom(LoginInfo);
-	const [viewID	, setViewID]	= useAtom(ViewID);
+	const [anchorEl, setAnchorEl] = useState(null)
+	const [loginInfo, setLoginInfo] = useAtom(LoginInfo)
+	const [viewID, setViewID] = useAtom(ViewID)
 
 	const handleOpen = useCallback((event) => {
-		setAnchorEl(event.currentTarget);
-	});
+		setAnchorEl(event.currentTarget)
+	})
 
 	const handleClose = useCallback((event) => {
-		setAnchorEl(null);
-	});
+		setAnchorEl(null)
+	})
 
 	const handleLogin = useCallback((event) => {
-		if(!loginInfo)
-		{
+		if (!loginInfo) {
 			fetch("./api/login.json")
-			.then(response => response.json())
-			.then(json => {
-				setLoginInfo(json);
-				setViewID(1);
-			});
+				.then((response) => response.json())
+				.then((json) => {
+					setLoginInfo(json)
+					setViewID(1)
+				})
+		} else {
+			setLoginInfo(undefined)
+			setViewID(0)
 		}
-		else{
-			setLoginInfo(undefined);
-			setViewID(0);
-		}
-		setAnchorEl(null);
-	});
+		setAnchorEl(null)
+	})
 
 	return (
-		<ViewAppBar sx={{ with: 1280}}>
+		<ViewAppBar sx={{ with: 1280 }}>
 			<Container>
 				<Toolbar>
-					<Box sx={{ flexGrow: 1}}>
+					<Box sx={{ flexGrow: 1 }}>
 						<IconLogo src="./assets/logo.png" />
 					</Box>
 					<Box>
-						<Button sx={{ width: 160 }} onClick={()=>{if(loginInfo){setViewID(2)}}}>
+						<Button
+							sx={{ width: 160 }}
+							onClick={() => {
+								if (loginInfo) {
+									setViewID(2)
+								}
+							}}
+						>
 							<IconNav src="./assets/icon_memo.png" />
-							<TextNav active={viewID && viewID === 2} >自分の記録</TextNav>
+							<TextNav active={viewID && viewID === 2}>自分の記録</TextNav>
 						</Button>
-						<Button sx={{ width: 160 }} onClick={()=>{if(loginInfo){setViewID(3)}}}>
+						<Button
+							sx={{ width: 160 }}
+							onClick={() => {
+								if (loginInfo) {
+									setViewID(3)
+								}
+							}}
+						>
 							<IconNav src="./assets/icon_challenge.png" />
 							<TextNav>チャレンジ</TextNav>
 						</Button>
-						<Button sx={{ width: 160 }} onClick={()=>{if(loginInfo){setViewID(4)}}}>
-							<IconBadge badgeContent={loginInfo ? 1 : 0} color="badge" >
+						<Button
+							sx={{ width: 160 }}
+							onClick={() => {
+								if (loginInfo) {
+									setViewID(4)
+								}
+							}}
+						>
+							<IconBadge badgeContent={loginInfo ? 1 : 0} color="badge">
 								<IconNav src="./assets/icon_info.png" />
 							</IconBadge>
 							<TextNav>お知らせ</TextNav>
@@ -112,10 +131,12 @@ export default function AppViewBar() {
 							anchorEl={anchorEl}
 							onClose={handleClose}
 							MenuListProps={{
-								'aria-labelledby': 'menu-button',
+								"aria-labelledby": "menu-button",
 							}}
 						>
-							<MenuItem sx={{ background: 'white'}} onClick={handleLogin}>{(loginInfo)? "ログアウト":"ログイン"}</MenuItem>
+							<MenuItem sx={{ background: "white" }} onClick={handleLogin}>
+								{loginInfo ? "ログアウト" : "ログイン"}
+							</MenuItem>
 						</MenuNav>
 					</Box>
 				</Toolbar>
